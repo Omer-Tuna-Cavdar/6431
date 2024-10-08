@@ -14,15 +14,15 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPLTVController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.pathplanner.lib.config;
-
-public class Drivetrain extends SubsystemBase {
+import com.pathplanner.lib.config.RobotConfig;
+class Drivetrain extends SubsystemBase {
     // Motor Controllers
     private final CANSparkMax leftFrontMotor = new CANSparkMax(Constants.ktankdriveMotor1lId, MotorType.kBrushless);
     private final CANSparkMax leftRearMotor = new CANSparkMax(Constants.ktankdriveMotor2lId, MotorType.kBrushless);
@@ -74,36 +74,34 @@ public class Drivetrain extends SubsystemBase {
         odometry.resetPosition(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d());
         zeroGyro();
         resetDriveEncoders();
-
+        
         RobotConfig config;
-    try{
-      config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
+        try{
+          config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+          // Handle exception as needed
+          e.printStackTrace();
+        }
 
-    // Configure AutoBuilder last
-    AutoBuilder.configure(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPLTVController(0.02), // PPLTVController is the built in path following controller for differential drive trains
-            config, // The robot configuration
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        // Configure AutoBuilder last
+        AutoBuilder.configureLTV(this::getPose, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+        new PPLTVController(0.02), // PPLTVController is the built in path following controller for differential drive trains
+        config, // The robot configuration
+        () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
-    );
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+        },
+        this); // Reference to this subsystem to set requirements)
 
     }
 
