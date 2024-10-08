@@ -12,19 +12,17 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
     private final Intake intakeSubsystem = new Intake();
 
-    @Override
+
     public void robotInit() {
         robotContainer = new RobotContainer();
         intakeSubsystem.resetPivotEncoder();
     }
 
-    @Override
     public void robotPeriodic() {
         // Runs the Scheduler
         CommandScheduler.getInstance().run();
     }
 
-    @Override
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -33,7 +31,6 @@ public class Robot extends TimedRobot {
         }
     }
 
-    @Override
     public void teleopInit() {
         // Cancel autonomous when teleop starts
         if (autonomousCommand != null) {

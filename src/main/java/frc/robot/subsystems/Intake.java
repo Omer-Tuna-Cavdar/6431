@@ -1,4 +1,3 @@
-// In Intake.java
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -67,7 +66,6 @@ public class Intake extends SubsystemBase {
         return isPivotAtPosition(Constants.INTAKE_CLOSED_POSITION);
     }
 
-    @Override
     public void periodic() {
         double currentPosition = getPivotPosition();
         double output = pivotPIDController.calculate(currentPosition);

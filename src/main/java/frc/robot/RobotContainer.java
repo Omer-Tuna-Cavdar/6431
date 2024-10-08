@@ -2,9 +2,7 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
-import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
 import java.util.function.BooleanSupplier;
@@ -15,13 +13,16 @@ public class RobotContainer {
     // Subsystems
     private final Drivetrain drivetrain = new Drivetrain();
     private final Intake intakeSubsystem = new Intake();
+    private final Shooter shootersubsytem = new Shooter();
     // Controllers and Buttons
     private final PS5Controller driverController = new PS5Controller(Constants.kDriverControllerPort);
     BooleanSupplier l1ButtonPressed = () -> driverController.getL1Button();
+    BooleanSupplier r2ButtonPressed =() -> driverController.getR2Button();
     private final Trigger L1 = new Trigger(l1ButtonPressed);
+    private final Trigger R2 = new Trigger(r2ButtonPressed);
     // Commands
     ToggleIntakeCommand ToggleIntakeCommand = new ToggleIntakeCommand(intakeSubsystem);
-    
+    ShootCommand shootCommand = new ShootCommand(shootersubsytem, intakeSubsystem, Constants.shooterTargetRPM);
 
 
     public RobotContainer() {
@@ -40,7 +41,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         L1.debounce(0.1).onTrue(ToggleIntakeCommand);
-        
+        R2.debounce(0.1).onTrue(shootCommand);
     }
 
     public Command getAutonomousCommand() {
