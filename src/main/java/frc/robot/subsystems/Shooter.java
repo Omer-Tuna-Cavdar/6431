@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.MathUtil;
 
 public class Shooter extends SubsystemBase {
     private final CANSparkMax ShooterL = new CANSparkMax(Constants.kShooterRId, MotorType.kBrushless);
