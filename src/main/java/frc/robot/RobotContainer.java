@@ -3,17 +3,26 @@
 package frc.robot;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.*;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import java.util.function.BooleanSupplier;
+import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
     // Subsystems
     private final Drivetrain drivetrain = new Drivetrain();
+    private final Intake intakeSubsystem = new Intake();
+    // Controllers and Buttons
+    private final PS5Controller driverController = new PS5Controller(Constants.kDriverControllerPort);
+    BooleanSupplier l1ButtonPressed = () -> driverController.getL1Button();
+    private final Trigger L1 = new Trigger(l1ButtonPressed);
+    // Commands
+    ToggleIntakeCommand ToggleIntakeCommand = new ToggleIntakeCommand(intakeSubsystem);
+    
 
-    // Controllers
-    private final XboxController driverController = new XboxController(Constants.DRIVER_CONTROLLER_PORT);
 
     public RobotContainer() {
         // Configure the default command for the drivetrain
@@ -30,9 +39,8 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        // Example: Bind a button to a command
-        // new JoystickButton(driverController, XboxController.Button.kA.value)
-        //     .whenPressed(new SomeCommand());
+        L1.debounce(0.1).onTrue(ToggleIntakeCommand);
+        
     }
 
     public Command getAutonomousCommand() {

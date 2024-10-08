@@ -13,7 +13,28 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
+  
     public static final int kDriverControllerPort = 0;
-  }
-}
+    public static final int kOperatorcontrollerPort=1;
+    public static final int ktankdriveMotor1rId= 11;
+    public static final int ktankdriveMotor2rId= 12;
+    public static final int ktankdriveMotor1lId= 13;
+    public static final int ktankdriveMotor2lId= 14;
+    public static final int GyroID=21;
+    public static final int kintakeRollerId = 31;
+    public static final int kintakePivotid = 32;
+    public static final boolean LEFT_MOTOR_INVERTED=false;
+    public static final boolean RIGHT_MOTOR_INVERTED=true;
+    public static final Double DEADBAND= 0.02;
+    public static final boolean intakerollerinverted = false;
+    public static final boolean intakepivotinverted = false;
+    public static final int IntakeBoreID = 0;
+    public static final double positionTolerance = 3;
+    public static final double pivotkP= 0.2;
+    public static final double pivotkI = 0.0;
+    public static final double pivotkD = 0.0;
+    public static final double INTAKE_OPEN_POSITION=120;
+    public static final double INTAKE_CLOSED_POSITION=5;
+    public static final double intakerollerspeed= 0.2;
+    }
+
