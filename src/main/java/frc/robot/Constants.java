@@ -47,13 +47,13 @@ public final class Constants {
     public static final double kshootervelocityTolerance = 1;
     public static final double shooterTargetRPM = 300;
     public static final double intakerollerrealesespeed = 0.1;
-    public static final double gearRatio = 1/60; //gear ratio of the drive
+    public static final double gearRatio = 1/60; //gear ratio of the drive //TO DO
     public static final double raduisOfWheelInMeters = 4; //TO DO 
     public static final double circumferenceOfWheelInMeters = Math.PI*2*raduisOfWheelInMeters;
     public static final double conversionFactor = circumferenceOfWheelInMeters*gearRatio;
-    public static final double trackwWidth= 23; //in meters
-    public static final double kmaxspeedmps = 3;
-    public static final double kmaxaccmpssqr = 3;
+    public static final double trackwWidth= 23; //in meters //TO DO
+    public static final double kmaxspeedmps = 3;//TO DO
+    public static final double kmaxaccmpssqr = 3;//TO DO
 
     }
 

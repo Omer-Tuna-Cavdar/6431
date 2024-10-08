@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.controllers.PPLTVController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.pathplanner.lib.config;
 
 public class Drivetrain extends SubsystemBase {
     // Motor Controllers
@@ -74,6 +74,7 @@ public class Drivetrain extends SubsystemBase {
         odometry.resetPosition(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d());
         zeroGyro();
         resetDriveEncoders();
+
         RobotConfig config;
     try{
       config = RobotConfig.fromGUISettings();
@@ -88,10 +89,7 @@ public class Drivetrain extends SubsystemBase {
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-            ),
+            new PPLTVController(0.02), // PPLTVController is the built in path following controller for differential drive trains
             config, // The robot configuration
             () -> {
               // Boolean supplier that controls when the path will be mirrored for the red alliance
