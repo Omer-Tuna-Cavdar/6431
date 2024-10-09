@@ -76,11 +76,12 @@ public class Drivetrain extends SubsystemBase {
         
 
     // Configure AutoBuilder last
-    AutoBuilder.configureRamsete(
+    AutoBuilder.configureLTV(
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforward
+            this::driveRobotRelative,
+            0.02, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforward
             config, // The robot configuration
             () -> {
               // Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -95,12 +96,7 @@ public class Drivetrain extends SubsystemBase {
             },
             this // Reference to this subsystem to set requirements
     );
-
-
-
-        
-
-    }
+}
 
     public void arcadeDrive(double fwd, double rot) {
         differentialDrive.arcadeDrive(fwd, rot, true);
@@ -178,11 +174,35 @@ public class Drivetrain extends SubsystemBase {
     public Pigeon2 getGyro(){
         return gyro;
     }
-
+    public double getDriveTrainAMPS(){
+        return leftFrontMotor.getOutputCurrent()+leftRearMotor.getOutputCurrent()+rightFrontMotor.getOutputCurrent()+rightRearMotor.getOutputCurrent();
+    }
+    public double getLeftDriveTrainAMPS(){
+        return leftFrontMotor.getOutputCurrent()+leftRearMotor.getOutputCurrent();
+    }
+    public double getRightDriveTrainAMPS(){
+        return rightFrontMotor.getOutputCurrent()+rightRearMotor.getOutputCurrent();
+    }
+    public double getDriveTrainVoltage(){
+        return leftFrontMotor.getBusVoltage()+leftRearMotor.getBusVoltage()+rightFrontMotor.getBusVoltage()+rightRearMotor.getBusVoltage();
+    }
+    public double getLeftDriveTrainVoltage(){
+        return leftFrontMotor.getBusVoltage()+leftRearMotor.getBusVoltage();
+    }
+    public double getRightDriveTrainVoltage(){
+        return rightFrontMotor.getBusVoltage()+rightRearMotor.getBusVoltage();
+    }
     public void periodic() {
         odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
         SmartDashboard.putNumber("Drive Left Encoder Pos", getLeftEncoderPosition());
         SmartDashboard.putNumber("Drive Right Encoder Pos", getRightEncoderPosition());
         SmartDashboard.putNumber("Gyro Heading", getHeading());
+        SmartDashboard.putNumber("Gyro Turn Rate", getTurnRate());
+        SmartDashboard.putNumber("Drive Train AMPS", getDriveTrainAMPS());
+        SmartDashboard.putNumber("Drive Train Left AMPS", getLeftDriveTrainAMPS());
+        SmartDashboard.putNumber("Drive Train Right AMPS", getRightDriveTrainAMPS());
+        SmartDashboard.putNumber("Drive Train Right Voltage", getRightDriveTrainVoltage());
+        SmartDashboard.putNumber("Drive Train Left Voltage", getLeftDriveTrainVoltage());
+        SmartDashboard.putNumber("Drive Train Voltage", getDriveTrainVoltage());
     }
 }

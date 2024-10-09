@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -21,8 +25,8 @@ public final class Constants {
     public static final int ktankdriveMotor1lId= 13;
     public static final int ktankdriveMotor2lId= 14;
     public static final int GyroID=21;
-    public static final int kintakeRollerId = 31;
-    public static final int kintakePivotid = 32;
+    public static final int kintakeRollerId = 33;
+    public static final int kintakePivotid = 34;
     public static final boolean LEFT_DriveMOTOR_INVERTED=false;
     public static final boolean RIGHT_DriveMOTOR_INVERTED=true;
     public static final Double DEADBAND= 0.02;
@@ -47,13 +51,18 @@ public final class Constants {
     public static final double kshootervelocityTolerance = 1;
     public static final double shooterTargetRPM = 300;
     public static final double intakerollerrealesespeed = 0.1;
-    public static final double gearRatio = 1/60; //gear ratio of the drive //TO DO
+    public static final double gearRatio = 8.46; //gear ratio of the drive //TO DO
     public static final double raduisOfWheelInMeters = 4; //TO DO 
     public static final double circumferenceOfWheelInMeters = Math.PI*2*raduisOfWheelInMeters;
     public static final double conversionFactor = circumferenceOfWheelInMeters*gearRatio;
-    public static final double trackwWidth= 23; //in meters //TO DO
-    public static final double kmaxspeedmps = 3;//TO DO
-    public static final double kmaxaccmpssqr = 3;//TO DO
+    public static final double trackwWidth= 0.5133; //in meters //TO DO
+    public static final double kmaxspeedmps = 5.38;//TO DO
+    public static final double kmaxaccmpssqr = 6;//TO DO
+    public static final double kintakePivotPmax = 0.5;//TO DO
+    public static final double kintakePivotPmin = -0.5;//TO DO
+    public static final Intake intakesubsystem = new Intake();
+    public static final Shooter shotersubsystem = new Shooter();
+    public static final Drivetrain drivetrainsubsystem = new Drivetrain();
 
     }
 

@@ -9,12 +9,10 @@ import frc.robot.subsystems.Drivetrain;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
-    private final Drivetrain drivetrain;
     private final DoubleSupplier forwardSupplier;
     private final DoubleSupplier rotationSupplier;
 
     public DriveCommand(Drivetrain drivetrain, DoubleSupplier forwardSupplier, DoubleSupplier rotationSupplier) {
-        this.drivetrain = drivetrain;
         this.forwardSupplier = forwardSupplier;
         this.rotationSupplier = rotationSupplier;
         addRequirements(drivetrain);
@@ -24,12 +22,12 @@ public class DriveCommand extends Command {
     public void execute() {
         double fwd = applyDeadband(forwardSupplier.getAsDouble());
         double rot = applyDeadband(rotationSupplier.getAsDouble());
-        drivetrain.arcadeDrive(fwd, rot);
+        Constants.drivetrainsubsystem.arcadeDrive(fwd, rot);
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.stop();
+        Constants.drivetrainsubsystem.stop();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
@@ -12,19 +13,20 @@ import edu.wpi.first.math.MathUtil;
 
 public class Intake extends SubsystemBase {
     // Motor Controllers
-    private final CANSparkMax RollerMotor = new CANSparkMax(Constants.kintakeRollerId, MotorType.kBrushless);
-    private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kintakePivotid, MotorType.kBrushless);
+
+    private final CANSparkMax rollerMotor = new CANSparkMax(60, MotorType.kBrushless);
+    private final CANSparkMax PivotMotor = new CANSparkMax(59, MotorType.kBrushless);
     private final DutyCycleEncoder IntakeBore = new DutyCycleEncoder(Constants.IntakeBoreID);
 
     private final PIDController pivotPIDController = new PIDController(Constants.pivotkP, Constants.pivotkI, Constants.pivotkD);
 
     public Intake() {
-        RollerMotor.setInverted(Constants.intakerollerinverted);
+        rollerMotor.setInverted(Constants.intakerollerinverted);
         PivotMotor.setInverted(Constants.intakepivotinverted);
-        RollerMotor.setIdleMode(IdleMode.kCoast);
+        rollerMotor.setIdleMode(IdleMode.kCoast);
         PivotMotor.setIdleMode(IdleMode.kBrake);
         PivotMotor.setSmartCurrentLimit(40);
-        RollerMotor.setSmartCurrentLimit(40);
+        rollerMotor.setSmartCurrentLimit(40);
 
         IntakeBore.setDistancePerRotation(360.0); // Configure encoder to output degrees
 
@@ -34,11 +36,11 @@ public class Intake extends SubsystemBase {
 
     // Intake control methods
     public void runIntake(double speed) {
-        RollerMotor.set(speed);
+        rollerMotor.set(speed);
     }
 
     public void stopIntake() {
-        RollerMotor.set(0);
+        rollerMotor.set(0);
     }
 
     // Pivot control methods
@@ -65,12 +67,27 @@ public class Intake extends SubsystemBase {
     public boolean isIntakeClosed() {
         return isPivotAtPosition(Constants.INTAKE_CLOSED_POSITION);
     }
+    public double getIntskeRollerAMPS() {
+        return rollerMotor.getOutputCurrent();
+    }   
+    public double getIntakePivotAMPS() {
+        return PivotMotor.getOutputCurrent();
+    }
+    public double getrollervoltage() {
+        return rollerMotor.getBusVoltage();
+    }
+    public double getpivotvoltage() {
+        return PivotMotor.getBusVoltage();
+    }
 
     public void periodic() {
         double currentPosition = getPivotPosition();
-        double output = pivotPIDController.calculate(currentPosition);
-        output = MathUtil.clamp(output, -0.5, 0.5);
+        double output = MathUtil.clamp(pivotPIDController.calculate(currentPosition), Constants.kintakePivotPmin, Constants.kintakePivotPmax); // Limit output to -0.5 to 0.5
         PivotMotor.set(output);
+        SmartDashboard.putNumber("intake pivot voltsge", getpivotvoltage());
+        SmartDashboard.putNumber("intake roller voltage", getrollervoltage());
+        SmartDashboard.putNumber("intake pivot current", getIntakePivotAMPS());
+        SmartDashboard.putNumber("intake roller current", getIntskeRollerAMPS());
     }
 
     public void resetPivotEncoder() {

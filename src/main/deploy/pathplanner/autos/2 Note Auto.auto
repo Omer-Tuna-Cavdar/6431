@@ -43,6 +43,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "openintake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "New Path"
@@ -52,6 +58,12 @@
           "type": "named",
           "data": {
             "name": "shootCommand"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         }
       ]

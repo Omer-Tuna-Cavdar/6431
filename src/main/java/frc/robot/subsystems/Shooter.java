@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends SubsystemBase {
     private final CANSparkMax ShooterL = new CANSparkMax(Constants.kShooterRId, MotorType.kBrushless);
@@ -34,5 +35,19 @@ public class Shooter extends SubsystemBase {
     public void stopShooter() {
         ShooterR.set(0);
         ShooterL.set(0);
+    }
+    public double getShooterVelocity(){
+        return ShooterR.getEncoder().getVelocity();
+    }
+    public double getShooterAMPS(){
+        return ShooterR.getOutputCurrent();
+    }
+    public double getShooterVoltage(){
+        return ShooterR.getBusVoltage();
+    }
+    public void periodic(){
+        SmartDashboard.putNumber("Shooter Velocity", getShooterVelocity());
+        SmartDashboard.putNumber("Shooter AMPS", getShooterAMPS());
+        SmartDashboard.putNumber("Shooter Voltage", getShooterVoltage());
     }
 }

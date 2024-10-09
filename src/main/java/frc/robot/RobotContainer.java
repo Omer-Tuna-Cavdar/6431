@@ -2,7 +2,6 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
 import java.util.function.BooleanSupplier;
@@ -11,9 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
     // Subsystems
-    private final Drivetrain drivetrain = new Drivetrain();
-    private final Intake intakeSubsystem = new Intake();
-    private final Shooter shootersubsytem = new Shooter();
     // Controllers and Buttons
     private final PS5Controller driverController = new PS5Controller(Constants.kDriverControllerPort);
     BooleanSupplier l1ButtonPressed = () -> driverController.getL1Button();
@@ -21,15 +17,15 @@ public class RobotContainer {
     private final Trigger L1 = new Trigger(l1ButtonPressed);
     private final Trigger R2 = new Trigger(r2ButtonPressed);
     // Commands
-    ToggleIntakeCommand ToggleIntakeCommand = new ToggleIntakeCommand(intakeSubsystem);
-    ShootCommand shootCommand = new ShootCommand(shootersubsytem, intakeSubsystem, Constants.shooterTargetRPM);
+    ToggleIntakeCommand ToggleIntakeCommand = new ToggleIntakeCommand(Constants.intakesubsystem);
+    ShootCommand shootCommand = new ShootCommand(Constants.shotersubsystem, Constants.intakesubsystem, Constants.shooterTargetRPM);
 
 
     public RobotContainer() {
         // Configure the default command for the drivetrain
-        drivetrain.setDefaultCommand(
+        Constants.drivetrainsubsystem.setDefaultCommand(
             new DriveCommand(
-                drivetrain,
+                Constants.drivetrainsubsystem,
                 () -> -driverController.getLeftY(), // Invert Y-axis
                 () -> driverController.getRightX()
             )
