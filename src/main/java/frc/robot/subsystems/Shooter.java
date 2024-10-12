@@ -25,19 +25,19 @@ public class Shooter extends SubsystemBase {
         double outputL = shooterPidController.calculate(ShooterL.getEncoder().getPosition(), RPM);
 
         // Implement clamping manually
-        if (outputR > 0.1) {
-            outputR = 0.3;
-        } else if (outputR < -0.1) {
-            outputR = -0.3;
+        if (outputR > 0.7) {
+            outputR = 0.7;
+        } else if (outputR < -0.7) {
+            outputR = -0.7;
         }
-       if (outputL > 0.1) {
-            outputL = 0.3;
-        } else if (outputL < -0.1) {
-            outputL = -0.3;
+       if (outputL > 0.7) {
+            outputL = 0.7;
+        } else if (outputL < -0.7) {
+            outputL = -0.7;
         } 
         
         ShooterR.set(outputR);
-        ShooterL.set(outputL);
+        ShooterL.set(-outputL);
     }
 
     public boolean isAtTargetRPM(double targetRPM) {

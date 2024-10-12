@@ -39,7 +39,7 @@ public final class Constants {
     public static final double pivotkD = 0;
     public static final double INTAKE_OPEN_POSITION=205;
     public static final double INTAKE_CLOSED_POSITION=10;
-    public static final double intakerollerspeed= 0.2;
+    public static final double intakerollerspeed= 0.4;
     public static final int kShooterRId = 41;
     public static final int kShooterLId = 42;
     public static final boolean kShooterLInverted= false;
