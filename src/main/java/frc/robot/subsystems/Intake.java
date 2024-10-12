@@ -10,10 +10,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.MathUtil;
-
 public class Intake extends SubsystemBase {
     // Motor Controllers
-
+    private double targetPivotPosition = Constants.INTAKE_CLOSED_POSITION;
     private final CANSparkMax rollerMotor = new CANSparkMax(Constants.kintakeRollerId, MotorType.kBrushless);
     private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kintakePivotid, MotorType.kBrushless);
     private final DutyCycleEncoder IntakeBore = new DutyCycleEncoder(Constants.IntakeBoreID);
@@ -27,10 +26,10 @@ public class Intake extends SubsystemBase {
         PivotMotor.setIdleMode(IdleMode.kBrake);
         PivotMotor.setSmartCurrentLimit(40);
         rollerMotor.setSmartCurrentLimit(40);
-
         IntakeBore.setDistancePerRotation(360.0); // Configure encoder to output degrees
 
-        pivotPIDController.setTolerance(Constants.positionTolerance);
+
+        pivotPIDController.setTolerance(1);
         pivotPIDController.setSetpoint(getPivotPosition()); // Initialize setpoint to current position
     }
 
@@ -45,8 +44,18 @@ public class Intake extends SubsystemBase {
 
     // Pivot control methods
     public void setPivotPosition(double position) {
-        pivotPIDController.setSetpoint(position);
+        double output = pivotPIDController.calculate(IntakeBore.getDistance(), position);
+        
+        // Implement clamping manually
+        if (output > 0.1) {
+            output = 0.1;
+        } else if (output < -0.1) {
+            output = -0.1;
+        }
+        
+        PivotMotor.set(output);
     }
+    
 
     public void stopPivot() {
         PivotMotor.set(0);
@@ -81,17 +90,33 @@ public class Intake extends SubsystemBase {
     }
 
     public void periodic() {
-        double currentPosition = getPivotPosition();
-        double output = MathUtil.clamp(pivotPIDController.calculate(currentPosition), Constants.kintakePivotPmin, Constants.kintakePivotPmax); // Limit output to -0.5 to 0.5
+        double output = pivotPIDController.calculate(getPivotPosition(), targetPivotPosition);
+
+        // Implement clamping
+        output = MathUtil.clamp(output, -0.1, 0.1); // Adjust the limits as needed
+        if(IntakeBore.getDistance() <= 100 && output < 0){
+            output = MathUtil.clamp(output, -0.02, 0.0);
+         }
+         if(IntakeBore.getDistance() >= 100 && output > 0){
+            output = MathUtil.clamp(output, 0.0, 0.05);
+         }
         PivotMotor.set(output);
+
         SmartDashboard.putNumber("intake pivot voltsge", getpivotvoltage());
         SmartDashboard.putNumber("intake roller voltage", getrollervoltage());
         SmartDashboard.putNumber("intake pivot current", getIntakePivotAMPS());
         SmartDashboard.putNumber("intake roller current", getIntskeRollerAMPS());
+        SmartDashboard.putNumber("intake encoder", getPivotPosition());
     }
 
     public void resetPivotEncoder() {
         IntakeBore.reset();
         pivotPIDController.reset();
+    }
+    public void setPivotTargetPosition(double targetPosition){
+        targetPivotPosition = targetPosition;
+    }
+    public double getPivotTargetPosition(){
+        return targetPivotPosition;
     }
 }

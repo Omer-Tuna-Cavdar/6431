@@ -24,28 +24,21 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "openintake"
-                }
-              }
-            ]
+            "name": "openintake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "openintake"
+            "name": "Close Intake"
           }
         },
         {

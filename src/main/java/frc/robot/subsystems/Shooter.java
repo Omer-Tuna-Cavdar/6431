@@ -10,21 +10,34 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends SubsystemBase {
-    private final CANSparkMax ShooterL = new CANSparkMax(Constants.kShooterRId, MotorType.kBrushless);
-    private final CANSparkMax ShooterR = new CANSparkMax(Constants.kShooterLId, MotorType.kBrushless);
+    private final CANSparkMax ShooterL = new CANSparkMax(Constants.kShooterLId, MotorType.kBrushless);
+    private final CANSparkMax ShooterR = new CANSparkMax(Constants.kShooterRId, MotorType.kBrushless);
     private final PIDController shooterPidController = new PIDController(Constants.kshooterP, Constants.kshooterI, Constants.kshooterD);
     public Shooter(){
         shooterPidController.setTolerance(Constants.kshooterpositionTolerance, Constants.kshootervelocityTolerance);
-        ShooterL.setInverted(Constants.kShooterLInverted);
-        ShooterR.setInverted(Constants.kShooterRInverted);
         ShooterL.setIdleMode(IdleMode.kCoast);
         ShooterR.setIdleMode(IdleMode.kCoast);
         ShooterL.setSmartCurrentLimit(40);
         ShooterR.setSmartCurrentLimit(40);
-        ShooterL.follow(ShooterR);
-    }
+        }
        public void runShooter(double RPM) {
-        shooterPidController.setSetpoint(RPM);
+        double outputR = shooterPidController.calculate(ShooterR.getEncoder().getPosition(), RPM);
+        double outputL = shooterPidController.calculate(ShooterL.getEncoder().getPosition(), RPM);
+
+        // Implement clamping manually
+        if (outputR > 0.1) {
+            outputR = 0.3;
+        } else if (outputR < -0.1) {
+            outputR = -0.3;
+        }
+       if (outputL > 0.1) {
+            outputL = 0.3;
+        } else if (outputL < -0.1) {
+            outputL = -0.3;
+        } 
+        
+        ShooterR.set(outputR);
+        ShooterL.set(outputL);
     }
 
     public boolean isAtTargetRPM(double targetRPM) {

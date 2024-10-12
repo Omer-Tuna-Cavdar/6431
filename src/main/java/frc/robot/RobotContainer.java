@@ -8,11 +8,13 @@ import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
     // Subsystems
@@ -22,7 +24,6 @@ public class RobotContainer {
     BooleanSupplier r2ButtonPressed =() -> driverController.getR2Button();
     private final Trigger L1 = new Trigger(l1ButtonPressed);
     private final Trigger R2 = new Trigger(r2ButtonPressed);
-    private final SendableChooser<Command> autoChooser;
 
     // Commands
     ToggleIntakeCommand ToggleIntakeCommand = new ToggleIntakeCommand(Constants.intakesubsystem);
@@ -41,8 +42,6 @@ public class RobotContainer {
                 () -> driverController.getRightX()
             )
         );
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
         NamedCommands.registerCommand("ShootCommand", shootCommand );
         NamedCommands.registerCommand("Open Intake", openintakeAutoCommand );
         NamedCommands.registerCommand("Close Intake", closeintakeAutoCommand);
@@ -51,12 +50,15 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        L1.debounce(0.1).onTrue(ToggleIntakeCommand);
-        R2.debounce(0.1).onTrue(shootCommand);
+       JoystickButton intakeButton = new JoystickButton(driverController,5);
+        intakeButton.onTrue(ToggleIntakeCommand);
+        JoystickButton shooterbutton = new JoystickButton(driverController, 8);
+        shooterbutton.onTrue(shootCommand);
     }
 
     public Command getAutonomousCommand() {
         // Return the autonomous command
-        return autoChooser.getSelected();    // Replace with actual autonomous command
+        return new PathPlannerAuto("2 Note Auto");
+    // Replace with actual autonomous command
     }
 }

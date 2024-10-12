@@ -5,8 +5,6 @@ import frc.robot.Constants;
 
 public class OpenintakeAutoCommand extends Command {;
     private double targetPosition;
-    private boolean isOpening;
-
     public OpenintakeAutoCommand(Intake intake) {
       
         addRequirements(intake);
@@ -14,18 +12,14 @@ public class OpenintakeAutoCommand extends Command {;
 
     @Override
     public void initialize() {
-    
-            // Intake is closed; open it and start the rollers
             targetPosition = Constants.INTAKE_OPEN_POSITION;
-            Constants.intakesubsystem.setPivotPosition(targetPosition);
-            Constants.intakesubsystem.runIntake(Constants.intakerollerspeed);
-            isOpening = false;
-    }
+            }
 
     @Override
     public void execute() {
-        // No additional actions needed; control is handled in the Intake subsystem's periodic method
-    }
+        Constants.intakesubsystem.setPivotPosition(targetPosition);
+        Constants.intakesubsystem.runIntake(Constants.intakerollerspeed);  
+              }
 
     @Override
     public boolean isFinished() {
@@ -38,8 +32,5 @@ public class OpenintakeAutoCommand extends Command {;
         // Stop the pivot motor to prevent further movement
         Constants.intakesubsystem.stopPivot();
         // If the intake was closing, ensure the rollers are stopped
-        if (!isOpening) {
-            Constants.intakesubsystem.stopIntake();
-        }
     }
 }
