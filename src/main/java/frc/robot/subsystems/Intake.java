@@ -14,8 +14,8 @@ import edu.wpi.first.math.MathUtil;
 public class Intake extends SubsystemBase {
     // Motor Controllers
 
-    private final CANSparkMax rollerMotor = new CANSparkMax(60, MotorType.kBrushless);
-    private final CANSparkMax PivotMotor = new CANSparkMax(59, MotorType.kBrushless);
+    private final CANSparkMax rollerMotor = new CANSparkMax(Constants.kintakeRollerId, MotorType.kBrushless);
+    private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kintakePivotid, MotorType.kBrushless);
     private final DutyCycleEncoder IntakeBore = new DutyCycleEncoder(Constants.IntakeBoreID);
 
     private final PIDController pivotPIDController = new PIDController(Constants.pivotkP, Constants.pivotkI, Constants.pivotkD);

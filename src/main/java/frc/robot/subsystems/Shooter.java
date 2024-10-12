@@ -28,15 +28,15 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isAtTargetRPM(double targetRPM) {
-        double currentRPM = ShooterR.getEncoder().getVelocity();
-        return Math.abs(currentRPM - targetRPM) <= Constants.kshootervelocityTolerance;
+        double currentRPM = getShooterRPM();
+        return Math.abs(currentRPM - targetRPM) <= Constants.kshooterRPMTolerance;
     }
 
     public void stopShooter() {
         ShooterR.set(0);
         ShooterL.set(0);
     }
-    public double getShooterVelocity(){
+    public double getShooterRPM(){
         return ShooterR.getEncoder().getVelocity();
     }
     public double getShooterAMPS(){
@@ -49,5 +49,9 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Velocity", getShooterVelocity());
         SmartDashboard.putNumber("Shooter AMPS", getShooterAMPS());
         SmartDashboard.putNumber("Shooter Voltage", getShooterVoltage());
+
+    }
+    public double getShooterVelocity(){
+        return ShooterR.getEncoder().getVelocity();
     }
 }

@@ -48,8 +48,8 @@ public final class Constants {
     public static final double kshooterI= 0.0;
     public static final double kshooterD= 0.0;
     public static final double kshooterpositionTolerance = 3;
-    public static final double kshootervelocityTolerance = 1;
-    public static final double shooterTargetRPM = 300;
+    public static final double kshooterRPMTolerance = 1;
+    public static final double shooterTargetRPM = 4000;
     public static final double intakerollerrealesespeed = 0.1;
     public static final double gearRatio = 8.46; //gear ratio of the drive //TO DO
     public static final double raduisOfWheelInMeters = 4; //TO DO 
@@ -63,6 +63,7 @@ public final class Constants {
     public static final Intake intakesubsystem = new Intake();
     public static final Shooter shotersubsystem = new Shooter();
     public static final Drivetrain drivetrainsubsystem = new Drivetrain();
+    public static final double kshootervelocityTolerance = 4;
 
     }
 
