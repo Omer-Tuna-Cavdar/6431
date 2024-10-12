@@ -31,6 +31,8 @@ public class Robot extends TimedRobot {
             autonomousCommand.schedule();
         }
     }
+    public void autonomousPeriodic(){
+    }
 
     public void teleopInit() {
         // Cancel autonomous when teleop starts

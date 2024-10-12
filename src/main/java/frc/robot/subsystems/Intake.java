@@ -95,10 +95,10 @@ public class Intake extends SubsystemBase {
         // Implement clamping
         output = MathUtil.clamp(output, -0.1, 0.1); // Adjust the limits as needed
         if(IntakeBore.getDistance() <= 100 && output < 0){
-            output = MathUtil.clamp(output, -0.02, 0.0);
+            output = MathUtil.clamp(output, -0.02, 0.2);
          }
          if(IntakeBore.getDistance() >= 100 && output > 0){
-            output = MathUtil.clamp(output, 0.0, 0.05);
+            output = MathUtil.clamp(output, -0.5, 0.05);
          }
         PivotMotor.set(output);
 
