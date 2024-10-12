@@ -3,23 +3,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 import frc.robot.Constants;
 
-public class OpenintakeAutoCommand extends Command {;
+public class CloseintakeAutoCommand extends Command {;
     private double targetPosition;
     private boolean isOpening;
 
-    public OpenintakeAutoCommand(Intake intake) {
+    public CloseintakeAutoCommand(Intake intake) {
       
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-    
             // Intake is closed; open it and start the rollers
-            targetPosition = Constants.INTAKE_OPEN_POSITION;
+            targetPosition = Constants.INTAKE_CLOSED_POSITION;
             Constants.intakesubsystem.setPivotPosition(targetPosition);
-            Constants.intakesubsystem.runIntake(Constants.intakerollerspeed);
-            isOpening = false;
+            Constants.intakesubsystem.stopIntake();
+            isOpening = true;
     }
 
     @Override
