@@ -28,6 +28,10 @@ public class RobotContainer {
     public RobotContainer() {
         CommandScheduler.getInstance().registerSubsystem(Constants.intakeSubsystem);
         CommandScheduler.getInstance().registerSubsystem(Constants.shooterSubsytem);
+        CommandScheduler.getInstance().registerSubsystem(Constants.drivetrain);
+        Constants.shooterSubsytem.setDefaultCommand(shootCommand);
+        Constants.intakeSubsystem.setDefaultCommand(ToggleIntakeCommand);
+
         // Configure the default command for the drivetrain
         Constants.drivetrain.setDefaultCommand(
             new DriveCommand(
