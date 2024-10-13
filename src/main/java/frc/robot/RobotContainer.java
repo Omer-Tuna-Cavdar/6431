@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
     // Subsystems
@@ -24,7 +26,8 @@ public class RobotContainer {
     private SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        
+        CommandScheduler.getInstance().registerSubsystem(Constants.intakeSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(Constants.shooterSubsytem);
         // Configure the default command for the drivetrain
         Constants.drivetrain.setDefaultCommand(
             new DriveCommand(
