@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtTargetRPM(double targetRPM) {
         double currentRPM = getShooterRPM();
-        return Math.abs(currentRPM - targetRPM) <= Constants.kshooterRPMTolerance;
+        return Math.abs(currentRPM - targetRPM) <= Constants.kshootervelocityTolerance;
     }
 
     public void stopShooter() {

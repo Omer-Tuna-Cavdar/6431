@@ -72,9 +72,6 @@ public class Drivetrain extends SubsystemBase {
         odometry.resetPosition(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d());
         zeroGyro();
         resetDriveEncoders();
-        
-        
-
     // Configure AutoBuilder last
     AutoBuilder.configureLTV(
             this::getPose, // Robot pose supplier

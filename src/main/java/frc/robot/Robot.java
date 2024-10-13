@@ -15,7 +15,7 @@ public class Robot extends TimedRobot {
 
     public void robotInit() {
         robotContainer = new RobotContainer();
-        Constants.intakesubsystem.resetPivotEncoder();
+        Constants.intakeSubsystem.resetPivotEncoder();
     }
 
     public void robotPeriodic() {
