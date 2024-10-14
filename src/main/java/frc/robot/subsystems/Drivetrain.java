@@ -74,9 +74,9 @@ public class Drivetrain extends SubsystemBase {
         differentialDrive = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
 
         // Safety Configuration
-        differentialDrive.setSafetyEnabled(true);
-        differentialDrive.setExpiration(0.02);
-        differentialDrive.setMaxOutput(0.8);
+        differentialDrive.setSafetyEnabled(false); // Disable safety to avoid jerky behavior in auto
+        differentialDrive.setExpiration(0.1);
+        differentialDrive.setMaxOutput(0.6); // Reduce max output to avoid shaking in auto
 
         // Kinematics, Odometry, and Gyro
         kinematics = new DifferentialDriveKinematics(Constants.trackwWidth);
@@ -90,11 +90,13 @@ public class Drivetrain extends SubsystemBase {
         leftPIDController.setI(Constants.LeftDrivekI);
         leftPIDController.setD(Constants.LeftDrivekD);
         leftPIDController.setFF(Constants.LeftDrivekFF);
+        leftPIDController.setOutputRange(-0.6, 0.6); // Limit output range for smoother control in auto
 
         rightPIDController.setP(Constants.RightDrivekP);
         rightPIDController.setI(Constants.RightDrivekI);
         rightPIDController.setD(Constants.RightDrivekD);
         rightPIDController.setFF(Constants.RightDrivekFF);
+        rightPIDController.setOutputRange(-0.6, 0.6); // Limit output range for smoother control in auto
 
         // Configure AutoBuilder last
         AutoBuilder.configureLTV(
@@ -102,7 +104,7 @@ public class Drivetrain extends SubsystemBase {
                 this::resetPose,
                 this::getRobotRelativeSpeeds,
                 this::driveRobotRelative,
-                0.02,
+                0.05, // Increase time step for smoother updates in auto
                 config,
                 () -> {
                     var alliance = DriverStation.getAlliance();
