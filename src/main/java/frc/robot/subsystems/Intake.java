@@ -93,9 +93,9 @@ public class Intake extends SubsystemBase {
         double output = pivotPIDController.calculate(getPivotPosition(), targetPivotPosition);
 
         // Implement clamping
-        output = MathUtil.clamp(output, -0.1, 0.1); // Adjust the limits as needed
+        output = MathUtil.clamp(output, -0.2, 0.2); // Adjust the limits as needed
         if(IntakeBore.getDistance() <= 100 && output < 0){
-            output = MathUtil.clamp(output, -0.02, 0.02);
+            output = MathUtil.clamp(output, -0.05, 0.05);
          }
          if(IntakeBore.getDistance() >= 100 && output > 0){
             output = MathUtil.clamp(output, -0.05, 0.05);

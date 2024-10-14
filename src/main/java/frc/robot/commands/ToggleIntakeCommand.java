@@ -71,4 +71,7 @@ public class ToggleIntakeCommand extends Command {;
             Constants.intakeSubsystem.stopIntake();
         }
     }
+    public boolean isintakeOpening(){
+        return isOpening;
+    }
 }

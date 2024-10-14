@@ -8,14 +8,11 @@ import frc.robot.Constants;
 
 public class ShootCommand extends Command {
     private final double targetRPM;
-    private boolean projectileReleased;
     private final Timer timer = new Timer();
 
     public ShootCommand(Shooter shooter, Intake intake, double targetRPM) {;
         this.targetRPM = targetRPM;
         addRequirements(shooter, intake);
-        projectileReleased = false;
-        timer.reset();
     }
 
     @Override
@@ -24,16 +21,6 @@ public class ShootCommand extends Command {
         Constants.shooterSubsytem.runShooter(targetRPM);
         timer.reset();
         timer.start();
-        if (timer.hasElapsed(1.0)) {
-            // If the shooter is ready, run the intake to release the projectile
-            Constants.intakeSubsystem.runIntake(Constants.intakerollerrealesespeed);
-            projectileReleased = true;
-        }
-        if (projectileReleased){
-            Constants.shooterSubsytem.stopShooter();
-            Constants.intakeSubsystem.stopIntake();
-        }
-
     }
 
     @Override
@@ -53,6 +40,6 @@ public class ShootCommand extends Command {
     @Override
     public boolean isFinished() {
         // Command completes after releasing the projectile
-        return projectileReleased && timer.hasElapsed(2);
+        return timer.hasElapsed(1.0);
     }
 }

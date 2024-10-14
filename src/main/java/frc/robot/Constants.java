@@ -38,7 +38,7 @@ public final class Constants {
     public static final double pivotkI = 0.0;
     public static final double pivotkD = 0.0;
     public static final double INTAKE_OPEN_POSITION=210;
-    public static final double INTAKE_CLOSED_POSITION=10;
+    public static final double INTAKE_CLOSED_POSITION=15;
     public static final double intakerollerspeed= 0.2;
     public static final int kShooterRId = 41;
     public static final int kShooterLId = 42;
@@ -61,6 +61,14 @@ public final class Constants {
     public final static Drivetrain drivetrain = new Drivetrain();
     public final static Intake intakeSubsystem = new Intake();
     public final static Shooter shooterSubsytem = new Shooter();
+    public static final double LeftDrivekP = 0.7;
+    public static final double LeftDrivekI = 0;
+    public static final double LeftDrivekD = 0;
+    public static final double LeftDrivekFF = 0;
+    public static final double RightDrivekP = 0.7;
+    public static final double RightDrivekI = 0;
+    public static final double RightDrivekD = 0;
+    public static final double RightDrivekFF = 0;
 
     }
 
