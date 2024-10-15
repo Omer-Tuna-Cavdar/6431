@@ -4,12 +4,17 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -209,6 +214,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void periodic() {
+        DataLogManager.start();
         odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
         SmartDashboard.putNumber("Drive Left Encoder Pos", getLeftEncoderPosition());
         SmartDashboard.putNumber("Drive Right Encoder Pos", getRightEncoderPosition());
@@ -220,5 +226,10 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Drive Train Right Voltage", getRightDriveTrainVoltage());
         SmartDashboard.putNumber("Drive Train Left Voltage", getLeftDriveTrainVoltage());
         SmartDashboard.putNumber("Drive Train Voltage", getDriveTrainVoltage());
+        SmartDashboard.putString("Drive Train 2dPose", getPose().toString());
+        SmartDashboard.putString("Drive Train 3dPose", get3dPose().toString());
+    }
+    public Pose3d get3dPose() {
+        return new Pose3d(getPose().getTranslation().getX(), getPose().getTranslation().getY(), getPose().getRotation().getDegrees(), new Rotation3d(gyro.getRoll().getValueAsDouble(), gyro.getPitch().getValueAsDouble(), gyro.getYaw().getValueAsDouble()));
     }
 }
