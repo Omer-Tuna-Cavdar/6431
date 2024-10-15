@@ -38,7 +38,9 @@ public class Robot extends TimedRobot {
 
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
-
+        Pose2d startingPose = autonomousCommand.getInitialPose();
+        Constants.drivetrain.resetOdometry(startingPose);
+        Constants.drivetrain.zeroGyro();
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
