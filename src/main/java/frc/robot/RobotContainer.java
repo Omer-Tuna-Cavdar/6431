@@ -48,8 +48,24 @@ public class RobotContainer {
         configureButtonBindings();
 
         autoChooser = AutoBuilder.buildAutoChooser();
-        NamedCommands.registerCommand("openintake", ToggleIntakeCommand);
-        NamedCommands.registerCommand("shootCommand", shootCommand);
+        NamedCommands.registerCommand("openintake", (new InstantCommand(() -> {
+    ToggleIntakeCommand.schedule();
+    if (!ToggleIntakeCommand.isintakeOpening()) {
+        new SequentialCommandGroup(
+            new InstantCommand(() -> Constants.intakeSubsystem.runIntake(Constants.intakerollerspeed)),
+            new WaitCommand(0.5), // Wait for 200 milliseconds
+            new InstantCommand(() -> Constants.intakeSubsystem.stopIntake())
+        ).schedule();
+    }
+    if(Constants.intakeSubsystem.isBumperPressed()){
+        new InstantCommand(() -> Constants.intakeSubsystem.stopIntake()).schedule();
+    }
+})));
+        NamedCommands.registerCommand("shootCommand", new SequentialCommandGroup(
+    new InstantCommand(() -> Constants.shooterSubsytem.runShooter(Constants.shooterTargetRPM)),
+    new WaitCommand(1.0), // Wait for 1 second
+    new InstantCommand(() -> Constants.intakeSubsystem.runIntake(-Constants.intakerollerspeed))
+));
 
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
