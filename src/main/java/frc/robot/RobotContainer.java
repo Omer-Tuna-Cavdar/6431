@@ -68,6 +68,9 @@ intakeButton.onTrue(new InstantCommand(() -> {
             new InstantCommand(() -> Constants.intakeSubsystem.stopIntake())
         ).schedule();
     }
+    if(Constants.intakeSubsystem.isBumperPressed()){
+        new InstantCommand(() -> Constants.intakeSubsystem.stopIntake()).schedule();
+    }
 }));
 r2.onTrue(new SequentialCommandGroup(
     new InstantCommand(() -> Constants.shooterSubsytem.runShooter(Constants.shooterTargetRPM)),

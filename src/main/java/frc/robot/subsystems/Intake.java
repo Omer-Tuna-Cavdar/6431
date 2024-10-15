@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +17,7 @@ public class Intake extends SubsystemBase {
     private final CANSparkMax rollerMotor = new CANSparkMax(Constants.kintakeRollerId, MotorType.kBrushless);
     private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kintakePivotid, MotorType.kBrushless);
     private final DutyCycleEncoder IntakeBore = new DutyCycleEncoder(Constants.IntakeBoreID);
+    private final DigitalInput bumperSwitch = new DigitalInput(1); // Bumper switch connected to DIO port 1 
 
     private final PIDController pivotPIDController = new PIDController(Constants.pivotkP, Constants.pivotkI, Constants.pivotkD);
 
@@ -118,5 +120,8 @@ public class Intake extends SubsystemBase {
     }
     public double getPivotTargetPosition(){
         return targetPivotPosition;
+    }
+        public boolean isBumperPressed() {
+        return !bumperSwitch.get(); // Assuming bumper switch is active-low
     }
 }
