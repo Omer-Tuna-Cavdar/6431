@@ -27,10 +27,11 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("isBrownout", RobotController.isBrownedOut());
     }
 
-    public void autonomousInit() {
-        // Schedule only the necessary commands for autonomous
-        CommandScheduler.getInstance().cancelAll();  // Cancel all running commands
-        autonomousCommand = robotContainer.getAutonomousCommand();  // Your autonomous command
+    public void autonomousInit() { // Your autonomous command
+        Pose2d startingPose = robotContainer.getStaringPoseFromAuto();
+        Constants.drivetrain.zeroGyro();
+        Constants.drivetrain.resetOdometry(startingPose); 
+
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
