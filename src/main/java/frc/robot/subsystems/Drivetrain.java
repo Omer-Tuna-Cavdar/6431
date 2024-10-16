@@ -4,8 +4,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -13,25 +11,27 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class Drivetrain extends SubsystemBase {
     // Motor Controllers
+    private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
+    private final NetworkTable drivetrainTable = ntInstance.getTable("Drivetrain");
+    private final NetworkTableEntry pose2dEntry = drivetrainTable.getEntry("Pose2d");
+    private final NetworkTableEntry pose3dEntry = drivetrainTable.getEntry("Pose3d");
     private final CANSparkMax leftFrontMotor = new CANSparkMax(Constants.ktankdriveMotor1lId, MotorType.kBrushless);
     private final CANSparkMax leftRearMotor = new CANSparkMax(Constants.ktankdriveMotor2lId, MotorType.kBrushless);
     private final CANSparkMax rightFrontMotor = new CANSparkMax(Constants.ktankdriveMotor1rId, MotorType.kBrushless);
@@ -213,8 +213,26 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void periodic() {
-        DataLogManager.start();
         odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+
+        Pose2d currentPose2d = getPose();
+        pose2dEntry.setDoubleArray(new double[] {
+            currentPose2d.getX(),
+            currentPose2d.getY(),
+            currentPose2d.getRotation().getRadians()
+        });
+
+        // Update and log 3D pose
+        Pose3d currentPose3d = get3dPose();
+        pose3dEntry.setDoubleArray(new double[] {
+            currentPose3d.getX(),
+            currentPose3d.getY(),
+            currentPose3d.getZ(),
+            currentPose3d.getRotation().getX(), // Roll
+            currentPose3d.getRotation().getY(), // Pitch
+            currentPose3d.getRotation().getZ()  // Yaw
+        });
+
         SmartDashboard.putNumber("Drive Left Encoder Pos", getLeftEncoderPosition());
         SmartDashboard.putNumber("Drive Right Encoder Pos", getRightEncoderPosition());
         SmartDashboard.putNumber("Gyro Heading", getHeading());
@@ -225,8 +243,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Drive Train Right Voltage", getRightDriveTrainVoltage());
         SmartDashboard.putNumber("Drive Train Left Voltage", getLeftDriveTrainVoltage());
         SmartDashboard.putNumber("Drive Train Voltage", getDriveTrainVoltage());
-        SmartDashboard.putString("Drive Train 2dPose", getPose().toString());
-        SmartDashboard.putString("Drive Train 3dPose", get3dPose().toString());
+       
     }
     public Pose3d get3dPose() {
         return new Pose3d(getPose().getTranslation().getX(), getPose().getTranslation().getY(), getPose().getRotation().getDegrees(), new Rotation3d(gyro.getRoll().getValueAsDouble(), gyro.getPitch().getValueAsDouble(), gyro.getYaw().getValueAsDouble()));
