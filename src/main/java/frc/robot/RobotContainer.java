@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -97,6 +98,8 @@ r2.onTrue(new SequentialCommandGroup(
     public Command getAutonomousCommand() {
         return new PathPlannerAuto("2NoteAuto");
       }
-    
+      public Pose2d getStaringPoseFromAuto(){
+    return PathPlannerAuto.getStaringPoseFromAutoFile("2NoteAuto");
+      }
     
 }
