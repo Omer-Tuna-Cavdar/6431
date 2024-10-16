@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import frc.robot.subsystems.Drivetrain;
@@ -11,64 +7,103 @@ import frc.robot.subsystems.Shooter;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * globally (i.e., public static). Do not put anything functional in this class.
  */
 public final class Constants {
-  
+
+    // Controller Ports
     public static final int kDriverControllerPort = 0;
-    public static final int kOperatorcontrollerPort=1;
-    public static final int ktankdriveMotor1rId= 11;
-    public static final int ktankdriveMotor2rId= 12;
-    public static final int ktankdriveMotor1lId= 13;
-    public static final int ktankdriveMotor2lId= 14;
-    public static final int GyroID=21;
-    public static final int kintakeRollerId = 33;
-    public static final int kintakePivotid = 34;
-    public static final boolean LEFT_DriveMOTOR_INVERTED=true;
-    public static final boolean RIGHT_DriveMOTOR_INVERTED=false;
-    public static final Double DEADBAND= 0.02;
-    public static final boolean intakerollerinverted = false;
-    public static final boolean intakepivotinverted = false;
+    public static final int kOperatorControllerPort = 1;
+
+    // Drivetrain Motor CAN IDs
+    public static final int kTankDriveMotor1rId = 11;
+    public static final int kTankDriveMotor2rId = 12;
+    public static final int kTankDriveMotor1lId = 13;
+    public static final int kTankDriveMotor2lId = 14;
+
+    // Gyro CAN ID
+    public static final int GyroID = 21;
+
+    // Intake Motor CAN IDs
+    public static final int kIntakeRollerId = 33;
+    public static final int kIntakePivotId = 34;
+
+    // Intake Sensors
     public static final int IntakeBoreID = 0;
-    public static final double positionTolerance = 3;
-    public static final double pivotkP= 0.02;
-    public static final double pivotkI = 0.0;
-    public static final double pivotkD = 0.0;
-    public static final double INTAKE_OPEN_POSITION=210;
-    public static final double INTAKE_CLOSED_POSITION=5;
-    public static final double intakerollerspeed= 0.7;
+
+    // Shooter Motor CAN IDs
     public static final int kShooterRId = 41;
     public static final int kShooterLId = 42;
-    public static final boolean kShooterLInverted= true;
-    public static final boolean kShooterRInverted= true;
-    public static final double kshooterP= 0.2;
-    public static final double kshooterI= 0.0;
-    public static final double kshooterD= 0.0;
-    public static final double kshooterpositionTolerance = 3;
-    public static final double kshootervelocityTolerance = 1;
-    public static final double shooterTargetRPM = 6000;
-    public static final double intakerollerrealesespeed = -0.7;
-    public static final double gearRatio = 8.46; //gear ratio of the drive //TO DO
-    public static final double raduisOfWheelInMeters = 0.0762; //TO DO 
-    public static final double circumferenceOfWheelInMeters = Math.PI*2*raduisOfWheelInMeters;
-    public static final double conversionFactor = circumferenceOfWheelInMeters*gearRatio;
-    public static final double trackwWidth= 0.53133; //in meters //TO DO
-    public static final double kmaxspeedmps = 3;//TO DO
-    public static final double kmaxaccmpssqr = 2;//TO DO
-    public final static Drivetrain drivetrain = new Drivetrain();
-    public final static Intake intakeSubsystem = new Intake();
-    public final static Shooter shooterSubsytem = new Shooter();
-    public static final double LeftDrivekP = 0.0005;
-    public static final double LeftDrivekI = 0;
-    public static final double LeftDrivekD = 0;
-    public static final double LeftDrivekFF = 0;
-    public static final double RightDrivekP = 0.0005;
-    public static final double RightDrivekI = 0;
-    public static final double RightDrivekD = 0;
-    public static final double RightDrivekFF = 0;
 
-    }
+    // Motor Inversions
+    public static final boolean LEFT_DRIVE_MOTOR_INVERTED = true;
+    public static final boolean RIGHT_DRIVE_MOTOR_INVERTED = false;
+    public static final boolean INTAKE_ROLLER_INVERTED = false;
+    public static final boolean INTAKE_PIVOT_INVERTED = false;
+    public static final boolean kShooterLInverted = true;
+    public static final boolean kShooterRInverted = true;
 
+    // Deadband
+    public static final double DEADBAND = 0.02;
+
+    // Intake Constants
+    public static final double POSITION_TOLERANCE = 3.0;
+    public static final double PIVOT_kP = 0.02;
+    public static final double PIVOT_kI = 0.0;
+    public static final double PIVOT_kD = 0.0;
+    public static final double INTAKE_OPEN_POSITION = 210.0;
+    public static final double INTAKE_CLOSED_POSITION = 5.0;
+    public static final double INTAKE_ROLLER_SPEED = 0.7;
+    public static final double INTAKE_ROLLER_RELEASE_SPEED = -0.7;
+
+    // Shooter Constants
+    public static final double kShooterP = 0.2;
+    public static final double kShooterI = 0.0;
+    public static final double kShooterD = 0.0;
+    public static final double kShooterPositionTolerance = 3.0;
+    public static final double kShooterVelocityTolerance = 1.0;
+    public static final double SHOOTER_TARGET_RPM = 6000.0;
+
+    // Drivetrain Physical Constants
+    public static final double GEAR_RATIO = 8.46; // Confirm this value based on your robot
+    public static final double WHEEL_DIAMETER_METERS = 0.1524; // 6 inches in meters
+    public static final double WHEEL_RADIUS_METERS = WHEEL_DIAMETER_METERS / 2.0;
+    public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI * WHEEL_DIAMETER_METERS;
+    public static final double ENCODER_POSITION_CONVERSION_FACTOR = WHEEL_CIRCUMFERENCE_METERS / GEAR_RATIO;
+    public static final double ENCODER_VELOCITY_CONVERSION_FACTOR = ENCODER_POSITION_CONVERSION_FACTOR / 60.0; // RPM to m/s
+    public static final double TRACK_WIDTH_METERS = 0.53133; // Measure and update this value
+
+    // Drivetrain Performance Constants
+    public static final double kMaxSpeedMetersPerSecond = 3.0; // Adjust based on your robot's capability
+    public static final double kMaxAccelerationMetersPerSecondSquared = 2.0; // Adjust as needed
+
+    // Feedforward constants (Replace these with values from robot characterization)
+    public static final double ksVolts = 0.65; // Static gain (example value)
+    public static final double kvVoltSecondsPerMeter = 2.75; // Velocity gain (example value)
+    public static final double kaVoltSecondsSquaredPerMeter = 0.3; // Acceleration gain (example value)
+
+    // Convert kV and kA to radians
+    public static final double kvVoltSecondsPerRadian = kvVoltSecondsPerMeter / WHEEL_RADIUS_METERS;
+    public static final double kaVoltSecondsSquaredPerRadian = kaVoltSecondsSquaredPerMeter / WHEEL_RADIUS_METERS;
+
+    // Drive Velocity PID Controller Gains (Replace kPDriveVel with characterization result)
+    public static final double kPDriveVel = 2.5; // Proportional gain (example value)
+    public static final double kIDriveVel = 0.0; // Integral gain
+    public static final double kDDriveVel = 0.0; // Derivative gain
+
+    // Drivetrain Motor PID Constants (These can be adjusted based on testing)
+    public static final double LeftDrivekP = 0.001;
+    public static final double LeftDrivekI = 0.0;
+    public static final double LeftDrivekD = 0.0;
+    public static final double LeftDrivekFF = 0.0;
+
+    public static final double RightDrivekP = 0.001;
+    public static final double RightDrivekI = 0.0;
+    public static final double RightDrivekD = 0.0;
+    public static final double RightDrivekFF = 0.0;
+
+    // Subsystems
+    public static final Drivetrain drivetrain = new Drivetrain();
+    public static final Intake intakeSubsystem = new Intake();
+    public static final Shooter shooterSubsystem = new Shooter();
+}

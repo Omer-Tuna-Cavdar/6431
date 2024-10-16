@@ -18,7 +18,7 @@ public class ShootCommand extends Command {
     @Override
     public void initialize() {
         // Start the shooter flywheels to reach the target RPM
-        Constants.shooterSubsytem.runShooter(targetRPM);
+        Constants.shooterSubsystem.runShooter(targetRPM);
         timer.reset();
         timer.start();
     }
@@ -32,7 +32,7 @@ public class ShootCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         // Stop both the shooter and the intake after shooting
-        Constants.shooterSubsytem.stopShooter();
+        Constants.shooterSubsystem.stopShooter();
         Constants.intakeSubsystem.stopIntake();
         timer.stop();
     }

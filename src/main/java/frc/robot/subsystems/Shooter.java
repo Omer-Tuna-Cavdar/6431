@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Shooter extends SubsystemBase {
     private final CANSparkMax ShooterL = new CANSparkMax(Constants.kShooterLId, MotorType.kBrushless);
     private final CANSparkMax ShooterR = new CANSparkMax(Constants.kShooterRId, MotorType.kBrushless);
-    private final PIDController shooterPidController = new PIDController(Constants.kshooterP, Constants.kshooterI, Constants.kshooterD);
+    private final PIDController shooterPidController = new PIDController(Constants.kShooterP, Constants.kShooterI, Constants.kShooterD);
     public Shooter(){
-        shooterPidController.setTolerance(Constants.kshooterpositionTolerance, Constants.kshootervelocityTolerance);
+        shooterPidController.setTolerance(Constants.kShooterPositionTolerance, Constants.kShooterVelocityTolerance);
         ShooterL.setIdleMode(IdleMode.kCoast);
         ShooterR.setIdleMode(IdleMode.kCoast);
         ShooterL.setSmartCurrentLimit(40);
@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtTargetRPM(double targetRPM) {
         double currentRPM = getShooterRPM();
-        return Math.abs(currentRPM - targetRPM) <= Constants.kshootervelocityTolerance;
+        return Math.abs(currentRPM - targetRPM) <= Constants.kShooterVelocityTolerance;
     }
 
     public void stopShooter() {

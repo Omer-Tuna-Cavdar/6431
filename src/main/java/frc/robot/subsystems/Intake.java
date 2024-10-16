@@ -14,16 +14,16 @@ import edu.wpi.first.math.MathUtil;
 public class Intake extends SubsystemBase {
     // Motor Controllers
     private double targetPivotPosition = Constants.INTAKE_CLOSED_POSITION;
-    private final CANSparkMax rollerMotor = new CANSparkMax(Constants.kintakeRollerId, MotorType.kBrushless);
-    private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kintakePivotid, MotorType.kBrushless);
+    private final CANSparkMax rollerMotor = new CANSparkMax(Constants.kIntakeRollerId, MotorType.kBrushless);
+    private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kIntakePivotId, MotorType.kBrushless);
     private final DutyCycleEncoder IntakeBore = new DutyCycleEncoder(Constants.IntakeBoreID);
     private final DigitalInput bumperSwitch = new DigitalInput(1); // Bumper switch connected to DIO port 1 
 
-    private final PIDController pivotPIDController = new PIDController(Constants.pivotkP, Constants.pivotkI, Constants.pivotkD);
+    private final PIDController pivotPIDController = new PIDController(Constants.PIVOT_kP, Constants.PIVOT_kI, Constants.PIVOT_kD);
 
     public Intake() {
-        rollerMotor.setInverted(Constants.intakerollerinverted);
-        PivotMotor.setInverted(Constants.intakepivotinverted);
+        rollerMotor.setInverted(Constants.INTAKE_ROLLER_INVERTED);
+        PivotMotor.setInverted(Constants.INTAKE_PIVOT_INVERTED);
         rollerMotor.setIdleMode(IdleMode.kCoast);
         PivotMotor.setIdleMode(IdleMode.kBrake);
         PivotMotor.setSmartCurrentLimit(40);
@@ -68,7 +68,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isPivotAtPosition(double targetPosition) {
-        return Math.abs(getPivotPosition() - targetPosition) <= Constants.positionTolerance;
+        return Math.abs(getPivotPosition() - targetPosition) <= Constants.POSITION_TOLERANCE;
     }
 
     public boolean isIntakeOpen() {

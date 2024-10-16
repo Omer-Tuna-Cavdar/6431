@@ -19,7 +19,7 @@ public class ToggleIntakeCommand extends Command {;
             // Intake is closed; open it and start the rollers
             targetPosition = Constants.INTAKE_OPEN_POSITION;
             Constants.intakeSubsystem.setPivotPosition(targetPosition);
-            Constants.intakeSubsystem.runIntake(Constants.intakerollerspeed);
+            Constants.intakeSubsystem.runIntake(Constants.INTAKE_ROLLER_SPEED);
             isOpening = true;
             Constants.intakeSubsystem.setPivotTargetPosition(targetPosition);
         } else if (Constants.intakeSubsystem.isIntakeOpen()) {
@@ -37,7 +37,7 @@ public class ToggleIntakeCommand extends Command {;
                 // Closer to closed position; open it
                 targetPosition = Constants.INTAKE_OPEN_POSITION;
                 Constants.intakeSubsystem.setPivotPosition(targetPosition);
-                Constants.intakeSubsystem.runIntake(Constants.intakerollerspeed);
+                Constants.intakeSubsystem.runIntake(Constants.INTAKE_ROLLER_SPEED);
                 Constants.intakeSubsystem.setPivotTargetPosition(targetPosition);
                 isOpening = true;
             } else {

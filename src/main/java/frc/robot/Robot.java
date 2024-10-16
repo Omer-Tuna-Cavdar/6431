@@ -2,7 +2,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
+
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot  {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
 
     public void robotInit() {
         robotContainer = new RobotContainer();
+        autonomousCommand = robotContainer.getAutonomousCommand();
         Constants.intakeSubsystem.resetPivotEncoder();
-        Constants.drivetrain.zeroGyro();
 
     }
 
@@ -29,15 +29,10 @@ public class Robot extends TimedRobot {
     }
 
     public void autonomousInit() { // Your autonomous command
-        Pose2d startingPose = robotContainer.getStaringPoseFromAuto();
-        Constants.drivetrain.zeroGyro();
-        Constants.drivetrain.resetPose(startingPose); 
 
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
-        Constants.drivetrain.zeroGyro();
-
         }
     
     public void autonomousPeriodic(){
