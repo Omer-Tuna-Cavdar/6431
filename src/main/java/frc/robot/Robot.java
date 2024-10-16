@@ -7,26 +7,17 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
 
 
 
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
-    private static DoubleLogEntry xPoseLog;
-    private DoubleLogEntry yPoseLog;
 
     public void robotInit() {
         robotContainer = new RobotContainer();
         Constants.intakeSubsystem.resetPivotEncoder();
-        DataLogManager.start();
-        DataLog log = DataLogManager.getLog();
-        xPoseLog = new DoubleLogEntry(log, "/drivetrain/pose/x");
-        yPoseLog = new DoubleLogEntry(log, "/drivetrain/pose/y");
+        Constants.drivetrain.zeroGyro();
 
     }
 
@@ -37,19 +28,28 @@ public class Robot extends TimedRobot {
     }
 
     public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
-
+        // Schedule only the necessary commands for autonomous
+        CommandScheduler.getInstance().cancelAll();  // Cancel all running commands
+        autonomousCommand = robotContainer.getAutonomousCommand();  // Your autonomous command
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
-    }
+        Constants.drivetrain.zeroGyro();
+
+        }
+    
     public void autonomousPeriodic(){
-    }
+
+        }
 
     public void teleopInit() {
         // Cancel autonomous when teleop starts
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+    }
+    public void practiceInit(){
+                Constants.drivetrain.zeroGyro();
+
     }
 }

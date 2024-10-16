@@ -109,7 +109,7 @@ public class Drivetrain extends SubsystemBase {
                 this::resetPose,
                 this::getRobotRelativeSpeeds,
                 this::driveRobotRelative,
-                0.05, // Increase time step for smoother updates in auto
+                0.1, // Increase time step for smoother updates in auto
                 config,
                 () -> {
                     var alliance = DriverStation.getAlliance();
@@ -131,8 +131,7 @@ public class Drivetrain extends SubsystemBase {
         double rightSpeed = wheelSpeeds.rightMetersPerSecond;
 
         // Use PID to set motor velocities
-        leftPIDController.setReference(leftSpeed, ControlType.kVelocity);
-        rightPIDController.setReference(rightSpeed, ControlType.kVelocity);
+        differentialDrive.tankDrive(leftSpeed, rightSpeed);
     }
 
     public void resetDriveEncoders() {

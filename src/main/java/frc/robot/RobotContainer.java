@@ -25,15 +25,15 @@ public class RobotContainer {
     // Commands
     ToggleIntakeCommand ToggleIntakeCommand = new ToggleIntakeCommand(Constants.intakeSubsystem);
     ShootCommand shootCommand = new ShootCommand(Constants.shooterSubsytem, Constants.intakeSubsystem, Constants.shooterTargetRPM);
+    ShooterStop shooterStop = new ShooterStop(Constants.shooterSubsytem, Constants.intakeSubsystem, Constants.shooterTargetRPM);
     //Auto 
     private SendableChooser<Command> autoChooser;
-
+    
     public RobotContainer() {
+        CommandScheduler.getInstance().setPeriod(0.1);
         CommandScheduler.getInstance().registerSubsystem(Constants.intakeSubsystem);
         CommandScheduler.getInstance().registerSubsystem(Constants.shooterSubsytem);
         CommandScheduler.getInstance().registerSubsystem(Constants.drivetrain);
-        Constants.shooterSubsytem.setDefaultCommand(shootCommand);
-        Constants.intakeSubsystem.setDefaultCommand(ToggleIntakeCommand);
 
         // Configure the default command for the drivetrain
         Constants.drivetrain.setDefaultCommand(
@@ -66,6 +66,7 @@ public class RobotContainer {
     new WaitCommand(1.0), // Wait for 1 second
     new InstantCommand(() -> Constants.intakeSubsystem.runIntake(-Constants.intakerollerspeed))
 ));
+        NamedCommands.registerCommand("stopshooter", shooterStop);
 
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -75,6 +76,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         JoystickButton r2 = new JoystickButton(driverController, 8);
         JoystickButton intakeButton = new JoystickButton(driverController, 5);
+        JoystickButton l2 = new JoystickButton(driverController, 7);
 intakeButton.onTrue(new InstantCommand(() -> {
     ToggleIntakeCommand.schedule();
     if (!ToggleIntakeCommand.isintakeOpening()) {
@@ -84,15 +86,13 @@ intakeButton.onTrue(new InstantCommand(() -> {
             new InstantCommand(() -> Constants.intakeSubsystem.stopIntake())
         ).schedule();
     }
-    if(Constants.intakeSubsystem.isBumperPressed()){
-        new InstantCommand(() -> Constants.intakeSubsystem.stopIntake()).schedule();
-    }
 }));
 r2.onTrue(new SequentialCommandGroup(
     new InstantCommand(() -> Constants.shooterSubsytem.runShooter(Constants.shooterTargetRPM)),
     new WaitCommand(1.0), // Wait for 1 second
     new InstantCommand(() -> Constants.intakeSubsystem.runIntake(-Constants.intakerollerspeed))
 ));
+l2.onTrue(shooterStop);
     }
     public Command getAutonomousCommand() {
         return new PathPlannerAuto("2NoteAuto");
