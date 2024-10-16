@@ -76,9 +76,12 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         JoystickButton r2 = new JoystickButton(driverController, 8);
-        JoystickButton intakeButton = new JoystickButton(driverController, 5);
+        JoystickButton l1 = new JoystickButton(driverController, 5);
         JoystickButton l2 = new JoystickButton(driverController, 7);
-intakeButton.onTrue(new InstantCommand(() -> {
+        JoystickButton cross = new JoystickButton(driverController, 2);
+        JoystickButton triangle = new JoystickButton(driverController, 4);
+
+l2.onTrue(new InstantCommand(() -> {
     ToggleIntakeCommand.schedule();
     if (!ToggleIntakeCommand.isintakeOpening()) {
         new SequentialCommandGroup(
@@ -93,7 +96,9 @@ r2.onTrue(new SequentialCommandGroup(
     new WaitCommand(1.0), // Wait for 1 second
     new InstantCommand(() -> Constants.intakeSubsystem.runIntake(-Constants.intakerollerspeed))
 ));
-l2.onTrue(shooterStop);
+l1.onTrue(shooterStop);
+cross.onTrue(new InstantCommand(() -> Constants.intakeSubsystem.runIntake(Constants.intakerollerspeed)));
+triangle.onTrue(new InstantCommand(() -> Constants.intakeSubsystem.runIntake(-0.7)));
     }
     public Command getAutonomousCommand() {
         return new PathPlannerAuto("2NoteAuto");
