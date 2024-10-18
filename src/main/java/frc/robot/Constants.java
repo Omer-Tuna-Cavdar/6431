@@ -51,7 +51,7 @@ public final class Constants {
     public static final double PIVOT_kP = 0.02;
     public static final double PIVOT_kI = 0.0;
     public static final double PIVOT_kD = 0.0;
-    public static final double INTAKE_OPEN_POSITION = 210.0;
+    public static final double INTAKE_OPEN_POSITION = 213.0;
     public static final double INTAKE_CLOSED_POSITION = 5.0;
     public static final double INTAKE_ROLLER_SPEED = 0.7;
     public static final double INTAKE_ROLLER_RELEASE_SPEED = -0.7;
@@ -74,8 +74,8 @@ public final class Constants {
     public static final double TRACK_WIDTH_METERS = 0.53133; // Measure and update this value
 
     // Drivetrain Performance Constants
-    public static final double kMaxSpeedMetersPerSecond = 3.0; // Adjust based on your robot's capability
-    public static final double kMaxAccelerationMetersPerSecondSquared = 2.0; // Adjust as needed
+    public static final double kMaxSpeedMetersPerSecond = 0.10; // Adjust based on your robot's capability
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.01; // Adjust as needed
 
     // Feedforward constants (Replace these with values from robot characterization)
     public static final double ksVolts = 0.65; // Static gain (example value)
@@ -87,17 +87,17 @@ public final class Constants {
     public static final double kaVoltSecondsSquaredPerRadian = kaVoltSecondsSquaredPerMeter / WHEEL_RADIUS_METERS;
 
     // Drive Velocity PID Controller Gains (Replace kPDriveVel with characterization result)
-    public static final double kPDriveVel = 2.5; // Proportional gain (example value)
+    public static final double kPDriveVel = 1.0; // Proportional gain (example value)
     public static final double kIDriveVel = 0.0; // Integral gain
     public static final double kDDriveVel = 0.0; // Derivative gain
 
     // Drivetrain Motor PID Constants (These can be adjusted based on testing)
-    public static final double LeftDrivekP = 0.001;
+    public static final double LeftDrivekP = 0.1;
     public static final double LeftDrivekI = 0.0;
     public static final double LeftDrivekD = 0.0;
     public static final double LeftDrivekFF = 0.0;
 
-    public static final double RightDrivekP = 0.001;
+    public static final double RightDrivekP = 0.1;
     public static final double RightDrivekI = 0.0;
     public static final double RightDrivekD = 0.0;
     public static final double RightDrivekFF = 0.0;
@@ -106,4 +106,9 @@ public final class Constants {
     public static final Drivetrain drivetrain = new Drivetrain();
     public static final Intake intakeSubsystem = new Intake();
     public static final Shooter shooterSubsystem = new Shooter();
+    public static final double RAMSETE_B = 2.0;
+    public static final double RAMSETE_ZETA = 0.7;
+    public static final double kS = 0.2; // Static friction voltage
+    public static final double kV = 0.2; // Velocity proportional voltage
+    public static final double kA = 0.2; // Acceleration proportional voltage
 }

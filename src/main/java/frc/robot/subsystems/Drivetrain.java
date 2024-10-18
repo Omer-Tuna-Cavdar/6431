@@ -6,10 +6,14 @@ import frc.robot.Constants;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.sim.Pigeon2SimState;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 // Import simulation classes
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -18,9 +22,12 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
@@ -90,12 +97,35 @@ public class Drivetrain extends SubsystemBase {
     private final DoubleLogEntry pose3dRollLog;
     private final DoubleLogEntry pose3dPitchLog;
     private final DoubleLogEntry pose3dYawLog;
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+                Constants.kS, Constants.kV, Constants.kA);
+    private final PIDController leftPIDController = new PIDController(
+    Constants.LeftDrivekP, Constants.LeftDrivekI, Constants.LeftDrivekD);
+    private final PIDController rightPIDController = new PIDController(
+                Constants.RightDrivekP, Constants.RightDrivekI, Constants.RightDrivekD);
 
     // Simulation components
     private DifferentialDrivetrainSim drivetrainSimulator;
     private Field2d fieldSim;
 
     public Drivetrain() {
+                    
+               AutoBuilder.configureLTV(
+                this::getPose,
+                this::resetOdometry,
+                this::getRobotRelativeSpeeds,
+                this::driveRobotRelative,
+                0.1, // Increase time step for smoother updates in auto
+                new ReplanningConfig(),
+                () -> {
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this);
+    
         // Motor configuration
         leftFrontMotor.restoreFactoryDefaults();
         leftRearMotor.restoreFactoryDefaults();
@@ -107,6 +137,11 @@ public class Drivetrain extends SubsystemBase {
 
         leftRearMotor.follow(leftFrontMotor);
         rightRearMotor.follow(rightFrontMotor);
+        leftFrontMotor.getPIDController().setP(Constants.LeftDrivekP);
+        rightFrontMotor.getPIDController().setP(Constants.RightDrivekP);
+        leftRearMotor.getPIDController().setP(Constants.LeftDrivekP);
+        rightRearMotor.getPIDController().setP(Constants.RightDrivekP);
+
 
         // Set idle modes
         leftFrontMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -267,7 +302,6 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // Update odometry
-        odometry.update(getHeading(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
         // Get current poses
         currentPose2d = getPose();
@@ -338,4 +372,37 @@ public class Drivetrain extends SubsystemBase {
         rightRearMotor.stopMotor();
         differentialDrive.feed();
     }
+    public DifferentialDriveOdometry getOdometry(){
+        return odometry;
+    }
+    public double getLeftEncoderPosition() {
+        return leftEncoder.getPosition();
+    }
+    
+    public double getRightEncoderPosition() {
+        return rightEncoder.getPosition();
+    }
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return kinematics.toChassisSpeeds(getWheelSpeeds());
+    }
+    public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+        // Step 1: Convert ChassisSpeeds to DifferentialDriveWheelSpeeds
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+    
+        // Step 2: Calculate Feedforward voltages
+        double leftFeedforward = feedforward.calculate(wheelSpeeds.leftMetersPerSecond);
+        double rightFeedforward = feedforward.calculate(wheelSpeeds.rightMetersPerSecond);
+    
+        // Step 3: Calculate PID controller outputs
+        double leftOutput = leftPIDController.calculate(leftEncoder.getVelocity(), wheelSpeeds.leftMetersPerSecond);
+        double rightOutput = rightPIDController.calculate(rightEncoder.getVelocity(), wheelSpeeds.rightMetersPerSecond);
+    
+        // Step 4: Combine Feedforward and PID outputs
+        double leftVolts = leftFeedforward + leftOutput;
+        double rightVolts = rightFeedforward + rightOutput;
+    
+        // Step 5: Set motor voltages
+        tankDriveVolts(leftVolts, rightVolts);
+    }
+    
 }
