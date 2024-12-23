@@ -17,7 +17,6 @@ public class Intake extends SubsystemBase {
     private final CANSparkMax rollerMotor = new CANSparkMax(Constants.kIntakeRollerId, MotorType.kBrushless);
     private final CANSparkMax PivotMotor = new CANSparkMax(Constants.kIntakePivotId, MotorType.kBrushless);
     private final DutyCycleEncoder IntakeBore = new DutyCycleEncoder(Constants.IntakeBoreID);
-    private final DigitalInput bumperSwitch = new DigitalInput(1); // Bumper switch connected to DIO port 1 
 
     private final PIDController pivotPIDController = new PIDController(Constants.PIVOT_kP, Constants.PIVOT_kI, Constants.PIVOT_kD);
 
@@ -121,7 +120,5 @@ public class Intake extends SubsystemBase {
     public double getPivotTargetPosition(){
         return targetPivotPosition;
     }
-        public boolean isBumperPressed() {
-        return !bumperSwitch.get(); // Assuming bumper switch is active-low
-    }
+
 }

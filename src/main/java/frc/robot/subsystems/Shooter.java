@@ -34,10 +34,13 @@ public class Shooter extends SubsystemBase {
             outputL = 0.7;
         } else if (outputL < -0.7) {
             outputL = -0.7;
-        } 
+        }
+        
+        ShooterL.setInverted(Constants.kShooterLInverted);
+        ShooterR.setInverted(Constants.kShooterRInverted);
         
         ShooterR.set(outputR);
-        ShooterL.set(-outputL);
+        ShooterL.set(outputL);
     }
 
     public boolean isAtTargetRPM(double targetRPM) {
