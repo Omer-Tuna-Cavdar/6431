@@ -62,7 +62,7 @@ public final class Constants {
     public static final double kShooterD = 0.0;
     public static final double kShooterPositionTolerance = 3.0;
     public static final double kShooterVelocityTolerance = 1.0;
-    public static final double SHOOTER_TARGET_RPM = 6000.0;
+    public static final double SHOOTER_TARGET_RPM = 8000.0;
 
     // Drivetrain Physical Constants
     public static final double GEAR_RATIO = 8.46; // Confirm this value based on your robot
