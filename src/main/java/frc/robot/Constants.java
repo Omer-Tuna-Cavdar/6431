@@ -37,7 +37,7 @@ public final class Constants {
 
     // Motor Inversions
     public static final boolean LEFT_DRIVE_MOTOR_INVERTED = true;
-    public static final boolean RIGHT_DRIVE_MOTOR_INVERTl = false;
+    public static final boolean RIGHT_DRIVE_MOTOR_INVERTED = false;
     public static final boolean INTAKE_ROLLER_INVERTED = false;
     public static final boolean INTAKE_PIVOT_INVERTED = false;
     public static final boolean kShooterLInverted = false;
