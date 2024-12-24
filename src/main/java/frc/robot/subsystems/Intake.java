@@ -107,6 +107,7 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("intake pivot current", getIntakePivotAMPS());
         SmartDashboard.putNumber("intake roller current", getIntskeRollerAMPS());
         SmartDashboard.putNumber("intake encoder", getPivotPosition());
+        System.out.println(getPivotPosition());
     }
 
     public void resetPivotEncoder() {

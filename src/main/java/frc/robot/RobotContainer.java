@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPRamseteController;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -41,7 +42,7 @@ public class RobotContainer {
         Constants.drivetrain.setDefaultCommand(
             new DriveCommand(
                 Constants.drivetrain,
-                () -> -driverController.getLeftY(), // Invert Y-axis
+                () -> -driverController.getLeftY()*0.8, // Invert Y-axis
                 () -> driverController.getRightX()
             )
         );
@@ -109,8 +110,6 @@ public class RobotContainer {
         PathPlannerPath trajectoryToShoot = PathPlannerPath.fromPathFile("2");
 
         // Create commands to follow the paths
-        FollowPathCommand driveToIntake = new FollowPathCommand(trajectoryToIntake);
-        FollowPathCommand driveToShoot = new FollowPathCommand(trajectoryToShoot);
 
         // Sequence the autonomous commands
         return new SequentialCommandGroup(
@@ -141,7 +140,6 @@ public class RobotContainer {
                 System.out.println("Autonomous Step 2: Starting intake roller.");
                 Constants.intakeSubsystem.runIntake(Constants.INTAKE_ROLLER_SPEED); // Start intake roller
             }),
-            driveToIntake, // Drive to the intake position while intake is running
             new WaitCommand(2.0), // Ensure time for note to be collected
             new InstantCommand(() -> {
                 System.out.println("Autonomous Step 2: Stopping intake roller and closing pivot.");
@@ -150,8 +148,7 @@ public class RobotContainer {
             }),
             new WaitUntilCommand(() -> Constants.intakeSubsystem.isIntakeClosed()), // Wait for pivot to reach the closed position
 
-            // Step 3: Drive back to the shooting position
-            driveToShoot,
+            // Step 3: Drive back to the shooting position//
             new InstantCommand(() -> {
                 System.out.println("Autonomous Step 3: Starting shooter for second note.");
                 Constants.shooterSubsystem.runShooter(Constants.SHOOTER_TARGET_RPM);
