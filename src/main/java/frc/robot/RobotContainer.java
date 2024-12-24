@@ -4,8 +4,9 @@ package frc.robot;
 import frc.robot.commands.*;
 import java.util.List;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class RobotContainer {
     // Subsystems
@@ -102,20 +104,69 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        Constants.drivetrain.resetOdometry(new Pose2d(new Translation2d(1.34,5.55),Constants.drivetrain.getHeading()));
-        return new PathPlannerAuto("2NoteAuto");
-    
-        /*return new SequentialCommandGroup(
+        // Load the PathPlanner trajectories
+        PathPlannerPath trajectoryToIntake = PathPlannerPath.fromPathFile("1");
+        PathPlannerPath trajectoryToShoot = PathPlannerPath.fromPathFile("2");
+
+        // Create commands to follow the paths
+        FollowPathCommand driveToIntake = new FollowPathCommand(trajectoryToIntake);
+        FollowPathCommand driveToShoot = new FollowPathCommand(trajectoryToShoot);
+
+        // Sequence the autonomous commands
+        return new SequentialCommandGroup(
+            // Step 1: Shoot the preloaded note
             new InstantCommand(() -> {
+                System.out.println("Autonomous Step 1: Starting shooter.");
                 Constants.shooterSubsystem.runShooter(Constants.SHOOTER_TARGET_RPM);
             }),
-            new WaitCommand(0.5),
+            new WaitCommand(0.5), // Allow time for shooter to spin up
             new InstantCommand(() -> {
-                Constants.intakeSubsystem.runIntake(-Constants.INTAKE_ROLLER_SPEED);
+                System.out.println("Autonomous Step 1: Running intake in reverse to shoot.");
+                Constants.intakeSubsystem.runIntake(-Constants.INTAKE_ROLLER_SPEED); // Run intake in reverse
             }),
+            new WaitCommand(0.5), // Time for note to exit
             new InstantCommand(() -> {
+                System.out.println("Autonomous Step 1: Stopping shooter and intake.");
                 Constants.intakeSubsystem.stopIntake();
                 Constants.shooterSubsystem.stopShooter();
-            })      );
-        */}
+            }),
+
+            // Step 2: Open intake and collect the second note
+            new InstantCommand(() -> {
+                System.out.println("Autonomous Step 2: Setting pivot to open position.");
+                Constants.intakeSubsystem.setPivotTargetPosition(Constants.INTAKE_OPEN_POSITION);
+            }),
+            new WaitUntilCommand(() -> Constants.intakeSubsystem.isIntakeOpen()), // Wait for pivot to reach the open position
+            new InstantCommand(() -> {
+                System.out.println("Autonomous Step 2: Starting intake roller.");
+                Constants.intakeSubsystem.runIntake(Constants.INTAKE_ROLLER_SPEED); // Start intake roller
+            }),
+            driveToIntake, // Drive to the intake position while intake is running
+            new WaitCommand(2.0), // Ensure time for note to be collected
+            new InstantCommand(() -> {
+                System.out.println("Autonomous Step 2: Stopping intake roller and closing pivot.");
+                Constants.intakeSubsystem.stopIntake();
+                Constants.intakeSubsystem.setPivotTargetPosition(Constants.INTAKE_CLOSED_POSITION); // Set pivot to closed position
+            }),
+            new WaitUntilCommand(() -> Constants.intakeSubsystem.isIntakeClosed()), // Wait for pivot to reach the closed position
+
+            // Step 3: Drive back to the shooting position
+            driveToShoot,
+            new InstantCommand(() -> {
+                System.out.println("Autonomous Step 3: Starting shooter for second note.");
+                Constants.shooterSubsystem.runShooter(Constants.SHOOTER_TARGET_RPM);
+            }),
+            new WaitCommand(0.5), // Allow time for shooter to spin up
+            new InstantCommand(() -> {
+                System.out.println("Autonomous Step 3: Running intake in reverse to shoot.");
+                Constants.intakeSubsystem.runIntake(-Constants.INTAKE_ROLLER_SPEED); // Run intake in reverse to shoot
+            }),
+            new WaitCommand(0.5), // Time for second note to exit
+            new InstantCommand(() -> {
+                System.out.println("Autonomous Step 3: Stopping shooter and intake.");
+                Constants.intakeSubsystem.stopIntake();
+                Constants.shooterSubsystem.stopShooter();
+            })
+        );
+    }
 }
