@@ -16,23 +16,23 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
 
     // Drivetrain Motor CAN IDs
-    public static final int kTankDriveMotor1rId = 11;
-    public static final int kTankDriveMotor2rId = 12;
-    public static final int kTankDriveMotor1lId = 13;
-    public static final int kTankDriveMotor2lId = 14;
+    public static final int kTankDriveMotor1rId = 10;
+    public static final int kTankDriveMotor2rId = 9;
+    public static final int kTankDriveMotor1lId = 4;
+    public static final int kTankDriveMotor2lId = 41;
 
     // Gyro CAN ID
     public static final int GyroID = 21;
 
     // Intake Motor CAN IDs
-    public static final int kIntakeRollerId = 33;
-    public static final int kIntakePivotId = 34;
+    public static final int kIntakeRollerId = 5;
+    public static final int kIntakePivotId = 33;
 
     // Intake Sensors
-    public static final int IntakeBoreID = 0;
+    public static final int IntakeBoreID = 1;
 
     // Shooter Motor CAN IDs
-    public static final int kShooterRId = 41;
+    public static final int kShooterRId = 34;
     public static final int kShooterLId = 42;
 
     // Motor Inversions

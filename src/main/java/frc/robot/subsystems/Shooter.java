@@ -37,7 +37,7 @@ public class Shooter extends SubsystemBase {
         } 
         
         ShooterR.set(outputR);
-        ShooterL.set(-outputL);
+        ShooterL.set(outputL);
     }
 
     public boolean isAtTargetRPM(double targetRPM) {
