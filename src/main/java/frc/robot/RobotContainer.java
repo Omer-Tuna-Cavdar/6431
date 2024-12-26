@@ -102,7 +102,10 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new SequentialCommandGroup(
+        Constants.drivetrain.resetOdometry(new Pose2d(new Translation2d(1.34,5.55),Constants.drivetrain.getHeading()));
+        return new PathPlannerAuto("2NoteAuto");
+    
+        /*return new SequentialCommandGroup(
             new InstantCommand(() -> {
                 Constants.shooterSubsystem.runShooter(Constants.SHOOTER_TARGET_RPM);
             }),
@@ -114,5 +117,5 @@ public class RobotContainer {
                 Constants.intakeSubsystem.stopIntake();
                 Constants.shooterSubsystem.stopShooter();
             })      );
-        }
+        */}
 }

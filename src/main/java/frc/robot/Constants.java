@@ -52,7 +52,7 @@ public final class Constants {
     public static final double PIVOT_kI = 0.0;
     public static final double PIVOT_kD = 0.0;
     public static final double INTAKE_OPEN_POSITION = 213.0;
-    public static final double INTAKE_CLOSED_POSITION = 5.0;
+    public static final double INTAKE_CLOSED_POSITION = 7.0;
     public static final double INTAKE_ROLLER_SPEED = 0.7;
     public static final double INTAKE_ROLLER_RELEASE_SPEED = -0.7;
 
