@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -51,8 +53,8 @@ public final class Constants {
     public static final double PIVOT_kP = 0.02;
     public static final double PIVOT_kI = 0.0;
     public static final double PIVOT_kD = 0.0;
-    public static final double INTAKE_OPEN_POSITION = 213.0;
-    public static final double INTAKE_CLOSED_POSITION = 7.0;
+    public static final double INTAKE_OPEN_POSITION = 205.0;
+    public static final double INTAKE_CLOSED_POSITION = 7.3;
     public static final double INTAKE_ROLLER_SPEED = 0.7;
     public static final double INTAKE_ROLLER_RELEASE_SPEED = -0.7;
 
@@ -111,4 +113,5 @@ public final class Constants {
     public static final double kS = 0.2; // Static friction voltage
     public static final double kV = 0.2; // Velocity proportional voltage
     public static final double kA = 0.2; // Acceleration proportional voltage
+    public static ReplanningConfig robotConfig;
 }

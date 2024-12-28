@@ -35,7 +35,8 @@ public class Robot extends TimedRobot  {
     }
 
     public void autonomousInit() {
-
+        CommandScheduler.getInstance().run();
+        
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }

@@ -7,6 +7,9 @@ import frc.robot.Constants;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.sim.Pigeon2SimState;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -22,7 +25,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -34,7 +36,8 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 // Imports for Data Logging and NetworkTables
@@ -42,7 +45,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-
 // Import REVPhysicsSim for SparkMax simulation
 import com.revrobotics.REVPhysicsSim;
 
@@ -110,22 +112,10 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
                     
-               AutoBuilder.configureLTV(
-                this::getPose,
-                this::resetOdometry,
-                this::getRobotRelativeSpeeds,
-                this::driveRobotRelative,
-                0.1, // Increase time step for smoother updates in auto
-                new ReplanningConfig(),
-                () -> {
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
-                this);
     
+        // Configure AutoBuilder last
+
+                
         // Motor configuration
         leftFrontMotor.restoreFactoryDefaults();
         leftRearMotor.restoreFactoryDefaults();
@@ -237,6 +227,51 @@ public class Drivetrain extends SubsystemBase {
             REVPhysicsSim.getInstance().addSparkMax(leftRearMotor, DCMotor.getNEO(1));
             REVPhysicsSim.getInstance().addSparkMax(rightRearMotor, DCMotor.getNEO(1));
         }
+         AutoBuilder.configureRamsete(
+                this::getPose, // Robot pose supplier
+                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                (speeds) -> driveRobotRelative(speeds),// Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                new ReplanningConfig(), // PPLTVController is the built in path following controller for differential drive trains
+                // The robot configuration
+                () -> {
+                  // Boolean supplier that controls when the path will be mirrored for the red alliance
+                  // This will flip the path being followed to the red side of the field.
+                  // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    
+                  var alliance = DriverStation.getAlliance();
+                  if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                  }
+                  return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
+        
+    }
+
+    public Command followPathCommand(String pathName) {
+        try {
+            PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+            return new FollowPathCommand(
+                path,
+                this::getPose,
+                this::getRobotRelativeSpeeds,
+                this::driveRobotRelative,
+                new PPLTVController(0.2),
+                new ReplanningConfig(),
+                this::isRedAlliance,
+                this
+            );
+        } catch (Exception e) {
+            DriverStation.reportError("Error loading path: " + pathName + " - " + e.getMessage(), e.getStackTrace());
+            return null;
+        }
+    }
+
+    private boolean isRedAlliance() {
+        var alliance = DriverStation.getAlliance();
+        return alliance.get() == DriverStation.Alliance.Red;
     }
 
     public void arcadeDrive(double fwd, double rot) {
@@ -404,5 +439,6 @@ public class Drivetrain extends SubsystemBase {
         // Step 5: Set motor voltages
         tankDriveVolts(leftVolts, rightVolts);
     }
+    
     
 }
